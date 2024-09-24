@@ -1,0 +1,99 @@
+CREATE DATABASE aula6_turma2;
+USE aula6_turma2;
+CREATE TABLE clientes (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    cidade VARCHAR(100)
+);
+
+INSERT INTO clientes (id, nome, cidade) VALUES
+(1, 'Maria Silva', 'São Paulo'),
+(2, 'José Souza', 'Rio de Janeiro'),
+(3, 'Ana Lima', 'Belo Horizonte'),
+(4, 'Paulo Santos', 'Curitiba'),
+(5, 'Carla Nogueira', 'Fortaleza'),
+(6, 'Fernanda Costa', 'São Paulo'),
+(7, 'Marcos Pereira', 'Rio de Janeiro'),
+(8, 'Bruna Almeida', 'Salvador'),
+(9, 'Pedro Cardoso', 'Brasília'),
+(10, 'Lucas Rocha', 'Recife'),
+(11, 'Juliana Ribeiro', 'Natal'),
+(12, 'Tiago Fernandes', 'Porto Alegre'),
+(13, 'Rafael Gomes', 'Florianópolis'),
+(14, 'Bianca Oliveira', 'Manaus'),
+(15, 'Renato Castro', 'Belém');
+
+CREATE TABLE produtos (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    preco DECIMAL(10, 2)
+);
+
+INSERT INTO produtos (id, nome, preco) VALUES
+(1, 'Notebook', 3500.00),
+(2, 'Smartphone', 2000.00),
+(3, 'Tablet', 1200.00),
+(4, 'Monitor', 800.00),
+(5, 'Teclado', 150.00),
+(6, 'Mouse', 75.00),
+(7, 'Cadeira Gamer', 900.00),
+(8, 'Fone de Ouvido', 300.00),
+(9, 'Impressora', 450.00),
+(10, 'Webcam', 250.00),
+(11, 'Carregador', 100.00),
+(12, 'Smartwatch', 600.00),
+(13, 'SSD', 400.00),
+(14, 'Memória RAM', 250.00),
+(15, 'Placa de Vídeo', 2800.00);
+
+CREATE TABLE vendas (
+    id INT PRIMARY KEY,
+    cliente_id INT,
+    produto_id INT,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);
+
+INSERT INTO vendas (id, cliente_id, produto_id) VALUES
+(1, 1, 1),
+(2, 2, 2),
+(4, 4, 4),
+(5, 5, 5),
+(6, 6, 6),
+(9, 9, 9),
+(10, 10, 10),
+(11, 11, 11),
+(12, 12, 12),
+(14, 14, 14),
+(15, 15, 15);
+
+CREATE TABLE fornecedores (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    produto_id INT,
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);
+
+INSERT INTO fornecedores (id, nome, produto_id) VALUES
+(1, 'Fornecedor A', 1),
+(2, 'Fornecedor B', 2),
+(3, 'Fornecedor C', 3),
+(4, 'Fornecedor D', 4),
+(5, 'Fornecedor E', 5),
+(6, 'Fornecedor F', 6),
+(7, 'Fornecedor G', 7),
+(8, 'Fornecedor H', 8),
+(9, 'Fornecedor I', 9),
+(14, 'Fornecedor N', 14),
+(15, 'Fornecedor O', 15);
+
+#UNION
+SELECT nome, produto_id FROM fornecedores UNION  SELECT id, nome FROM produtos;
+
+
+#INTERCEPT
+SELECT * FROM fornecedores INNER JOIN produtos ON fornecedores.produto_id = produtos.id;
+
+#EXCEPT
+SELECT * FROM produtos LEFT JOIN fornecedores ON fornecedores.produto_id = produtos.id;
+SELECT * FROM produtos WHERE id NOT IN (SELECT produto_id FROM fornecedores);
