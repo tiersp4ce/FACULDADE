@@ -1,0 +1,104 @@
+CREATE DATABASE mercadinho;
+USE mercadinho;
+
+CREATE TABLE clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    email VARCHAR(100),
+    telefone VARCHAR(15),
+    cidade VARCHAR(50)
+);
+
+CREATE TABLE produtos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    preco DECIMAL(10,2),
+    estoque INT
+);
+
+CREATE TABLE pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT,
+    produto_id INT,
+    quantidade INT,
+    data_pedido DATE,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);
+
+INSERT INTO clientes (nome, email, telefone, cidade) VALUES
+('Carlos Silva', 'carlos@gmail.com', '1234-5678', 'São Paulo'),
+('Ana Souza', 'ana@gmail.com', '9876-5432', 'Rio de Janeiro'),
+('Paulo Santos', 'paulo@gmail.com', '1111-2222', 'Belo Horizonte'),
+('Mariana Costa', 'mariana@gmail.com', '3333-4444', 'Curitiba'),
+('João Pereira', 'joao@gmail.com', '5555-6666', 'Porto Alegre'),
+('Luiza Ferreira', 'luiza@gmail.com', '7777-8888', 'Recife'),
+('Pedro Almeida', 'pedro@gmail.com', '9999-0000', 'Salvador'),
+('Beatriz Lima', 'beatriz@gmail.com', '1212-3434', 'Fortaleza'),
+('Lucas Oliveira', 'lucas@gmail.com', '5656-7878', 'Manaus'),
+('Clara Ramos', 'clara@gmail.com', '9090-1122', 'Brasília'),
+('Gabriel Menezes', 'gabriel@gmail.com', '2323-4545', 'São Paulo'),
+('Letícia Araujo', 'leticia@gmail.com', '6767-9898', 'Goiânia'),
+('Thiago Martins', 'thiago@gmail.com', '7878-9090', 'São Luís'),
+('Larissa Rocha', 'larissa@gmail.com', '1234-5678', 'Natal'),
+('Matheus Dias', 'matheus@gmail.com', '9876-5432', 'Cuiabá');
+
+INSERT INTO produtos (nome, preco, estoque) VALUES
+('Notebook', 2500.00, 10),
+('Celular', 1500.00, 20),
+('Tablet', 1000.00, 15),
+('Teclado', 100.00, 50),
+('Mouse', 50.00, 100),
+('Monitor', 800.00, 12),
+('Impressora', 600.00, 5),
+('Caixa de Som', 200.00, 30),
+('Webcam', 150.00, 25),
+('Fone de Ouvido', 120.00, 40),
+('Smartwatch', 800.00, 10),
+('HD Externo', 300.00, 15),
+('Pen Drive', 50.00, 100),
+('Carregador', 80.00, 50),
+('Cabo USB', 20.00, 200);
+
+INSERT INTO pedidos (cliente_id, produto_id, quantidade, data_pedido) VALUES
+(1, 1, 1, '2024-09-20'),
+(2, 2, 2, '2024-09-21'),
+(3, 3, 1, '2024-09-22'),
+(4, 4, 3, '2024-09-23'),
+(5, 5, 2, '2024-09-24'),
+(6, 6, 1, '2024-09-25'),
+(7, 7, 5, '2024-09-26'),
+(8, 8, 3, '2024-09-27'),
+(9, 9, 2, '2024-09-28'),
+(10, 10, 4, '2024-09-29'),
+(11, 11, 1, '2024-09-30'),
+(12, 12, 6, '2024-10-01'),
+(13, 13, 1, '2024-10-02'),
+(14, 14, 2, '2024-10-03'),
+(15, 15, 1, '2024-10-04');
+
+
+
+#Funçao 1
+delimiter //
+Create function demanda_estoque( estoque int)
+returns INT
+deterministic
+begin
+	declare demanda int;
+	set demanda = estoque >= 50;
+    RETURN demanda;
+end;
+
+
+#Funçao 2
+delimiter //
+Create function calcular_imposto(preco decimal(10,2))
+returns	decimal(10,2)
+deterministic
+begin
+	declare imposto decimal(10,2);
+    set imposto = preco * 0.20;
+    return preco;
+end;
+
