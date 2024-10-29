@@ -101,4 +101,3 @@ begin
     set imposto = preco * 0.20;
     return preco;
 end;
-
