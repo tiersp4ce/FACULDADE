@@ -1,0 +1,113 @@
+// Classe nó da árvore
+class No {
+    int valor;
+    No esquerda, direita;
+
+    public No(int valor) {
+        this.valor = valor;
+        this.esquerda = null;
+        this.direita = null;
+    }
+}
+
+// Classe da Arvore Binária
+class ArvoreBinaria {
+    No raiz;
+
+    // Metodo para inserir um valor na arvore
+    public void inserir(No node, int valor) { 
+        if (node != null) {
+            if (valor < node.valor) {
+                if (node.esquerda != null) {
+                    inserir(node.esquerda, valor);
+                } else {
+                    System.out.println("Inserindo " + valor + " à esquerda de " + node.valor);
+                    node.esquerda = new No(valor);
+                }
+            } else if (valor > node.valor) {
+                if (node.direita != null) {
+                    inserir(node.direita, valor);
+                } else {
+                    System.out.println("Inserindo " + valor + " à direita de " + node.valor);
+                    node.direita = new No(valor);
+                }
+            }
+        }
+    }
+
+    // Metodo para remover o menor valor da arvore
+    public No removeValorMinimoDaArvore(No node) {
+        if (node == null) {
+            System.out.println("ERRO: Arvore vazia");
+            return null;
+        } else if (node.esquerda != null) {
+            node.esquerda = removeValorMinimoDaArvore(node.esquerda);
+            return node;
+        } else {
+            return node.direita;
+        }
+    }
+
+    // Valores em pre-ordem.
+    public void prefixado(No no) {
+        if (no != null) {
+            System.out.print(no.valor + " ");
+            prefixado(no.esquerda);
+            prefixado(no.direita);
+        }
+    }
+
+    // Valores em pos-ordem.
+    public void posfixado(No no) {
+        if (no != null) {
+            posfixado(no.esquerda);
+            posfixado(no.direita);
+            System.out.print(no.valor + " ");
+        }
+    }
+
+    // Valores em in-ordem. 
+    public void emordem(No no) {
+        if (no != null) {
+            emordem(no.esquerda);
+            System.out.print(no.valor + " ");
+            emordem(no.direita);
+        }
+    }
+}
+
+// Classe para testar a Arvore Binaria
+public class TesteArvoreBinaria {
+    public static void main(String[] args) {
+        ArvoreBinaria arvore = new ArvoreBinaria();
+
+        // Inserção de valores na árvore
+        arvore.raiz = new No(10); // raiz da árvore
+        arvore.inserir(arvore.raiz, 5);
+        arvore.inserir(arvore.raiz, 15);
+        arvore.inserir(arvore.raiz, 3);
+        arvore.inserir(arvore.raiz, 7);
+        arvore.inserir(arvore.raiz, 13);
+        arvore.inserir(arvore.raiz, 18);
+
+        System.out.println("Valores em Pre-Ordem:");
+        arvore.prefixado(arvore.raiz);
+        System.out.println("\n");
+
+        System.out.println("Valores em Pos-Ordem:");
+        arvore.posfixado(arvore.raiz);
+        System.out.println("\n");
+
+        System.out.println("Valores em In-Ordem:");
+        arvore.emordem(arvore.raiz);
+        System.out.println("\n");
+
+        // Remoção do menor valor
+        System.out.println("Removendo o menor valor da arvore:");
+        arvore.raiz = arvore.removeValorMinimoDaArvore(arvore.raiz);
+        
+        System.out.println("Valores em Ordem apos remocao do menor valor:");
+        arvore.emordem(arvore.raiz);
+        System.out.println();
+    }
+}
