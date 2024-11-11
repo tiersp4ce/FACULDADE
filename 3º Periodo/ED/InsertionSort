@@ -1,0 +1,62 @@
+import java.util.Scanner;
+
+public class InsertionSort {
+    public static void insertionSort(int[] array) {
+        int n = array.length;
+        
+        for (int i = 1; i < n; i++) {
+            int key = array[i];
+            int j = i - 1;
+
+            // Move os elementos maiores que o "key" para uma posicao a frente da sua posicao atual
+            while (j >= 0 && array[j] > key) {
+                array[j + 1] = array[j];
+                j = j - 1;
+            }
+            array[j + 1] = key;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Escolha uma opcao:");
+        System.out.println("1. Usar uma lista predefinida de numeros");
+        System.out.println("2. Digitar os proprios numeros");
+        int opcao = scanner.nextInt();
+
+        int[] array;
+
+        if (opcao == 1) {
+            array = new int[]{12, 11, 13, 5, 6}; // Lista predefinida
+            System.out.println("Usando a lista predefinida: 12, 11, 13, 5, 6");
+        } else if (opcao == 2) {
+            System.out.print("Quantos numeros voce quer inserir? ");
+            int n = scanner.nextInt();
+            array = new int[n];
+
+            System.out.println("Digite os numeros:");
+            for (int i = 0; i < n; i++) {
+                array[i] = scanner.nextInt();
+            }
+        } else {
+            System.out.println("Opcao invalida.");
+            scanner.close();
+            return;
+        }
+
+        System.out.println("Array original:");
+        for (int i : array) {
+            System.out.print(i + " ");
+        }
+        
+        insertionSort(array);
+        
+        System.out.println("\nArray ordenado:");
+        for (int i : array) {
+            System.out.print(i + " ");
+        }
+
+        scanner.close();
+    }
+}
