@@ -1,4 +1,8 @@
-// Classe nó da árvore
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Classe do no da arvore
 class No {
     int valor;
     No esquerda, direita;
@@ -10,7 +14,7 @@ class No {
     }
 }
 
-// Classe da Arvore Binária
+// Classe da Arvore Binaria
 class ArvoreBinaria {
     No raiz;
 
@@ -21,14 +25,14 @@ class ArvoreBinaria {
                 if (node.esquerda != null) {
                     inserir(node.esquerda, valor);
                 } else {
-                    System.out.println("Inserindo " + valor + " à esquerda de " + node.valor);
+                    System.out.println("Inserindo " + valor + " a esquerda de " + node.valor);
                     node.esquerda = new No(valor);
                 }
             } else if (valor > node.valor) {
                 if (node.direita != null) {
                     inserir(node.direita, valor);
                 } else {
-                    System.out.println("Inserindo " + valor + " à direita de " + node.valor);
+                    System.out.println("Inserindo " + valor + " a direita de " + node.valor);
                     node.direita = new No(valor);
                 }
             }
@@ -48,7 +52,7 @@ class ArvoreBinaria {
         }
     }
 
-    // Valores em pre-ordem.
+    // Percurso em pre-ordem (prefixado)
     public void prefixado(No no) {
         if (no != null) {
             System.out.print(no.valor + " ");
@@ -57,7 +61,7 @@ class ArvoreBinaria {
         }
     }
 
-    // Valores em pos-ordem.
+    // Percurso em pos-ordem (posfixado)
     public void posfixado(No no) {
         if (no != null) {
             posfixado(no.esquerda);
@@ -66,7 +70,7 @@ class ArvoreBinaria {
         }
     }
 
-    // Valores em in-ordem. 
+    // Percurso em ordem (em ordem)
     public void emordem(No no) {
         if (no != null) {
             emordem(no.esquerda);
@@ -76,38 +80,77 @@ class ArvoreBinaria {
     }
 }
 
-// Classe para testar a Arvore Binaria
+// Classe principal para testar a Arvore Binaria
 public class TesteArvoreBinaria {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         ArvoreBinaria arvore = new ArvoreBinaria();
 
-        // Inserção de valores na árvore
-        arvore.raiz = new No(10); // raiz da árvore
-        arvore.inserir(arvore.raiz, 5);
-        arvore.inserir(arvore.raiz, 15);
-        arvore.inserir(arvore.raiz, 3);
-        arvore.inserir(arvore.raiz, 7);
-        arvore.inserir(arvore.raiz, 13);
-        arvore.inserir(arvore.raiz, 18);
+        System.out.println("Escolha uma opcao para inserir valores:");
+        System.out.println("1 - Usar lista pre-definida de valores");
+        System.out.println("2 - Inserir valores manualmente");
+        int opcao = scanner.nextInt();
 
-        System.out.println("Valores em Pre-Ordem:");
+        List<Integer> valores = new ArrayList<>();
+        
+        if (opcao == 1) {
+            // Lista pre-definida de valores
+            valores.add(10);
+            valores.add(5);
+            valores.add(15);
+            valores.add(3);
+            valores.add(7);
+            valores.add(13);
+            valores.add(18);
+            System.out.println("Usando a lista pre-definida: " + valores);
+        } else if (opcao == 2) {
+            System.out.println("Insira os valores (digite 'sair' para parar):");
+            while (true) {
+                String input = scanner.next();
+                if (input.equalsIgnoreCase("sair")) break;
+                
+                try {
+                    int valor = Integer.parseInt(input);
+                    valores.add(valor);
+                } catch (NumberFormatException e) {
+                    System.out.println("Entrada invalida. Digite um numero inteiro ou 'sair' para finalizar.");
+                }
+            }
+            System.out.println("Valores inseridos: " + valores);
+        } else {
+            System.out.println("Opcao invalida!");
+            scanner.close();
+            return;
+        }
+
+        // Inserir os valores na arvore
+        if (!valores.isEmpty()) {
+            arvore.raiz = new No(valores.get(0)); // Primeiro valor como raiz
+            for (int i = 1; i < valores.size(); i++) {
+                arvore.inserir(arvore.raiz, valores.get(i));
+            }
+        }
+
+        System.out.println("\nPercurso em Pre-Ordem:");
         arvore.prefixado(arvore.raiz);
         System.out.println("\n");
 
-        System.out.println("Valores em Pos-Ordem:");
+        System.out.println("Percurso em Pos-Ordem:");
         arvore.posfixado(arvore.raiz);
         System.out.println("\n");
 
-        System.out.println("Valores em In-Ordem:");
+        System.out.println("Percurso em Ordem:");
         arvore.emordem(arvore.raiz);
         System.out.println("\n");
 
-        // Remoção do menor valor
+        // Remocao do menor valor
         System.out.println("Removendo o menor valor da arvore:");
         arvore.raiz = arvore.removeValorMinimoDaArvore(arvore.raiz);
         
-        System.out.println("Valores em Ordem apos remocao do menor valor:");
+        System.out.println("Percurso em Ordem apos remocao do menor valor:");
         arvore.emordem(arvore.raiz);
         System.out.println();
+
+        scanner.close();
     }
 }
