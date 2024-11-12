@@ -1,0 +1,140 @@
+CREATE DATABASE loja_manutencao_celulares;
+USE loja_manutencao_celulares;
+CREATE TABLE clientes (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+email VARCHAR(100) UNIQUE,
+telefone VARCHAR(15),
+data_cadastro DATE DEFAULT (CURRENT_DATE)
+);
+
+CREATE TABLE funcionarios (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+cargo VARCHAR(50),
+telefone VARCHAR(15),
+salario DECIMAL(10, 2),
+data_admissao DATE DEFAULT (CURRENT_DATE)
+);
+
+CREATE TABLE pecas (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+descricao TEXT,
+preco DECIMAL(8, 2) NOT NULL,
+estoque INT NOT NULL
+);
+
+CREATE TABLE ordens_servico (
+id INT AUTO_INCREMENT PRIMARY KEY,
+id_cliente INT NOT NULL,
+id_funcionario INT NOT NULL,
+descricao_problema TEXT NOT NULL,
+status ENUM('Aberto', 'Em andamento', 'Finalizado', 'Cancelado') DEFAULT 'Aberto',
+data_abertura DATE DEFAULT (CURRENT_DATE),
+data_finalizacao DATE,
+valor_total DECIMAL(10, 2),
+FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON DELETE CASCADE,
+FOREIGN KEY (id_funcionario) REFERENCES funcionarios(id) ON DELETE CASCADE
+);
+
+CREATE TABLE pagamentos (
+id INT AUTO_INCREMENT PRIMARY KEY,
+id_ordem INT NOT NULL,
+forma_pagamento ENUM('Dinheiro', 'Cartão', 'Pix', 'Transferência') NOT NULL,
+valor_pago DECIMAL(10, 2) NOT NULL,
+data_pagamento DATE DEFAULT (CURRENT_DATE),
+FOREIGN KEY (id_ordem) REFERENCES ordens_servico(id) ON DELETE CASCADE);
+
+INSERT INTO clientes (nome, email, telefone) VALUES
+('João Silva', 'joao@gmail.com', '99999-1111'),
+('Maria Oliveira', 'maria@gmail.com', '99999-2222'),
+('Carlos Santos', 'carlos@gmail.com', '99999-3333'),
+('Ana Souza', 'ana@hotmail.com', '99999-4444'),
+('Fernanda Lima', 'fernanda@gmail.com', '99999-5555'),
+('Pedro Almeida', 'pedro@gmail.com', '99999-6666'),
+('Clara Nunes', 'clara@gmail.com', '99999-7777'),
+('Lucas Silva', 'lucas@gmail.com', '99999-8888'),
+('Juliana Costa', 'juliana@gmail.com', '99999-9999'),
+('Roberto Pereira', 'roberto@gmail.com', '99999-0000');
+
+INSERT INTO funcionarios (nome, cargo, telefone, salario) VALUES
+('Carlos Pereira', 'Técnico', '98888-1111', 3500.00),
+('Ana Souza', 'Atendente', '98888-2222', 1800.00),
+('Felipe Araújo', 'Técnico', '98888-3333', 3400.00),
+('Bruna Costa', 'Gerente', '98888-4444', 4500.00),
+('Marcos Lima', 'Técnico', '98888-5555', 3200.00),
+('Luiza Martins', 'Atendente', '98888-6666', 1900.00),
+('Paulo César', 'Auxiliar', '98888-7777', 1500.00),
+('Renata Borges', 'Supervisora', '98888-8888', 4000.00),
+('Thiago Fernandes', 'Técnico', '98888-9999', 3700.00),
+('Gabriel Silva', 'Atendente', '98888-0000', 1800.00);
+
+INSERT INTO pecas (nome, descricao, preco, estoque) VALUES
+('Tela iPhone 11', 'Tela LCD para iPhone 11', 500.00, 15),
+('Bateria Galaxy S9', 'Bateria original para Galaxy S9', 180.00, 20),
+('Câmera Traseira iPhone 8', 'Módulo de câmera para iPhone 8', 300.00, 10),
+('Conector de Carga Xiaomi', 'Conector para Redmi Note 8', 50.00, 30),
+('Carcaça Moto G7', 'Carcaça completa para Moto G7', 200.00, 5),
+('Display Samsung A30', 'Tela AMOLED para Galaxy A30', 450.00, 12),
+('Bateria iPhone XR', 'Bateria compatível com iPhone XR', 220.00, 18),
+('Placa Mãe Moto E6', 'Placa de reposição para Moto E6', 800.00, 3),
+('Fone de Ouvido Samsung', 'Fone original Samsung', 100.00, 25),
+('Película de Vidro Universal', 'Película para várias marcas', 20.00, 50);
+
+INSERT INTO ordens_servico (id_cliente, id_funcionario, descricao_problema, status,
+valor_total) VALUES
+(1, 1, 'Troca de tela quebrada - iPhone 11', 'Finalizado', 600.00),
+(2, 3, 'Substituição de bateria - Galaxy S9', 'Em andamento', 250.00),
+(3, 5, 'Troca de conector de carga - Redmi Note 8', 'Aberto', 100.00),
+(4, 1, 'Reparo na placa mãe - Moto E6', 'Cancelado', 900.00),
+(5, 2, 'Substituição de câmera traseira - iPhone 8', 'Finalizado', 400.00),
+(6, 4, 'Troca de carcaça - Moto G7', 'Em andamento', 250.00),
+(7, 7, 'Instalação de película de vidro', 'Finalizado', 30.00),
+(8, 8, 'Troca de display - Samsung A30', 'Aberto', 500.00),(9, 6, 'Revisão completa - iPhone XR', 'Em andamento', 300.00),
+(10, 9, 'Verificação de fone de ouvido', 'Finalizado', 80.00);
+
+INSERT INTO pagamentos (id_ordem, forma_pagamento, valor_pago) VALUES
+(1, 'Cartão', 600.00),
+(2, 'Pix', 250.00),
+(5, 'Dinheiro', 400.00),
+(7, 'Cartão', 30.00),
+(10, 'Transferência', 80.00),
+(6, 'Dinheiro', 250.00),
+(3, 'Cartão', 100.00),
+(8, 'Pix', 500.00),
+(4, 'Transferência', 0.00), -- Cancelado
+(9, 'Cartão', 300.00);
+
+
+#1
+START TRANSACTION;
+INSERT INTO ordens_servico (id_cliente, id_funcionario, descricao_problema, status,
+valor_total) VALUES (1, 1, 'Troca de Display - iPhone 12 Pro Max', 'Em andamento',
+800.00);
+SAVEPOINT sv1;
+UPDATE pecas SET nome = 'Display Iphone 12 Pro Max', descricao = 'Tela amoled Iphone
+12 pro max', preco = '800.00' WHERE id = 6;
+ROLLBACK TO sv1;
+COMMIT;
+
+
+#2
+START TRANSACTION;
+INSERT INTO pagamentos (id_ordem, forma_pagamento, valor_pago) VALUES (7, 'Pix',
+6.00);
+SAVEPOINT sv1;
+UPDATE ordens_servico SET status = 'Aberto' WHERE id = 1;
+ROLLBACK TO sv1;
+COMMIT;
+
+#3
+START TRANSACTION;
+SAVEPOINT sv1;
+INSERT INTO pecas (nome, descricao, preco, estoque) VALUES ('Tela de Nintendo Switch',
+'Tela AMOLED para Nintendo Switch Oled', 750.00,
+5);
+UPDATE pagamentos SET id_ordem = 3, forma_pagamento = 'pix', valor_pago = 80000.00
+WHERE id = 1;
+ROLLBACK TO sv1;
+COMMIT;
